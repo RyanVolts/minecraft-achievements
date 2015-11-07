@@ -1,11 +1,16 @@
 package com.SkyIsland.AchievementHunter.Players;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -85,18 +90,70 @@ public class PlayerManager {
 	}
 	
 	/**
-	 * Loads from the provided configuration.<br />
+	 * Loads from the provided file.<br />
 	 * <b>All information</b> held by this manager before the load will be erased and permanently lost!
 	 * @param config
 	 * @return
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public void load(YamlConfiguration config) throws InvalidConfigurationException {
-		if (config == null) {
-			throw new InvalidConfigurationException("Null configuration!");
+	public void load(File loadFile) throws InvalidConfigurationException, FileNotFoundException, IOException {
+		
+		YamlConfiguration config = new YamlConfiguration();
+		
+		config.load(loadFile);
+		
+		records.clear();
+		
+		//Expects a list of:
+		//id:
+		//  record:
+		
+		UUID id;
+		PlayerRecord record;
+		ConfigurationSection section;
+		
+		for (String key : config.getKeys(false)) {
+			section = config.getConfigurationSection(key);
+			
+			if (!section.contains("record")) {
+				throw new InvalidConfigurationException("Missing a key in player record: " + key);
+			}
+			
+			id = UUID.fromString(key);
+			record = (PlayerRecord) section.get("record");
+			
+			records.put(id, record);
 		}
 		
-		//Expects a list of player records
+	}
+	
+	/**
+	 * Saves the current manager's records to the provided file.<br />
+	 * If the save is operating in overwrite mode, it will delete an existing file before creating it's new one.<br />
+	 * Otherwise, it will just fail to save.
+	 * @param config
+	 * @param overwrite
+	 * @throws IOException 
+	 */
+	public void save(File saveFile, boolean overwrite) throws IOException {
+		if (saveFile.exists()) {
+			if (overwrite) {
+				saveFile.delete();
+			} else {
+				throw new IOException("The provided file already exists!");
+			}
+		}
 		
+		YamlConfiguration config = new YamlConfiguration();
+		ConfigurationSection section;
+		
+		for (Entry<UUID, PlayerRecord> e : records.entrySet()) {
+			section = config.createSection(e.getKey().toString());
+			section.set("id", e.getValue());
+		}
+		
+		config.save(saveFile);
 	}
 	
 	/**
