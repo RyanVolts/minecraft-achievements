@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+
 /**
  * Stores information about each player -- metrics and which achievements they've unlocked
  * @author Skyler
@@ -18,7 +23,13 @@ public class PlayerManager {
 	 * @author Skyler
 	 *
 	 */
-	public class PlayerRecord {
+	public static class PlayerRecord implements ConfigurationSerializable {
+		
+		public static final void registerAliases() {
+			ConfigurationSerialization.registerClass(PlayerRecord.class, "PlayerRecord");
+			ConfigurationSerialization.registerClass(PlayerRecord.class, "playerrecord");
+			ConfigurationSerialization.registerClass(PlayerRecord.class, PlayerRecord.class.getName());
+		}
 		
 		private List<String> achievements;
 		
@@ -42,6 +53,25 @@ public class PlayerManager {
 		public boolean hasAchievement(String achievement) {
 			return achievements.contains(achievement);
 		}
+
+		@Override
+		public Map<String, Object> serialize() {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("achievements", achievements);
+			
+			return map;
+		}
+
+	    @SuppressWarnings("unchecked")
+		public static PlayerRecord valueOf(Map<String, Object> configMap) {
+	        PlayerRecord record = new PlayerRecord();
+	        
+	        record.achievements = (List<String>) configMap.get("achievements");
+	        
+	        return record;
+	    }
+
 		
 	}
 	
@@ -52,6 +82,21 @@ public class PlayerManager {
 	 */
 	public PlayerManager() {
 		this.records = new HashMap<UUID, PlayerRecord>();
+	}
+	
+	/**
+	 * Loads from the provided configuration.<br />
+	 * <b>All information</b> held by this manager before the load will be erased and permanently lost!
+	 * @param config
+	 * @return
+	 */
+	public void load(YamlConfiguration config) throws InvalidConfigurationException {
+		if (config == null) {
+			throw new InvalidConfigurationException("Null configuration!");
+		}
+		
+		//Expects a list of player records
+		
 	}
 	
 	/**
