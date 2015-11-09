@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.SkyIsland.AchievementHunter.Achievements.EquipArmorAchievement;
 import com.SkyIsland.AchievementHunter.Players.PlayerManager;
 
 /**
@@ -37,6 +39,8 @@ public class AchievementHunterPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 			plugin = this;
+			
+			registerAchievements();
 			
 			loadPlayerManager();
 	}
@@ -71,5 +75,13 @@ public class AchievementHunterPlugin extends JavaPlugin {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private void registerAchievements() {
+		Bukkit.getPluginManager().registerEvents(new EquipArmorAchievement(), this);
+	}
+	
+	public PlayerManager getPlayerManager() {
+		return playerManager;
 	}
 }
