@@ -50,8 +50,12 @@ public class PlayerManager {
 			return achievements;
 		}
 		
-		public void addAchievement(String achievement) {
-			achievements.add(achievement);
+		public boolean addAchievement(String achievement) {
+			if (!achievements.contains(achievement)) {
+				achievements.add(achievement);
+				return true;
+			}
+			return false;
 		}
 		
 		/**
@@ -154,7 +158,7 @@ public class PlayerManager {
 		
 		for (Entry<UUID, PlayerRecord> e : records.entrySet()) {
 			section = config.createSection(e.getKey().toString());
-			section.set("id", e.getValue());
+			section.set("record", e.getValue());
 		}
 		
 		config.save(saveFile);
@@ -202,17 +206,26 @@ public class PlayerManager {
 	 */
 	public boolean addAchievement(UUID playerID, String achievement) {
 		if (records.containsKey(playerID)) {
-			records.get(playerID).addAchievement(achievement);
+			if (records.get(playerID).addAchievement(achievement)) {
+			
+				OfflinePlayer op = Bukkit.getOfflinePlayer(playerID);
+				if (op.isOnline()) {
+					((Player) op).sendMessage("You've unlocked the achievement " + ChatColor.GREEN + "["
+							+ achievement + "]" + ChatColor.RESET);
+				}
+				
+			}
 			return false;
 		}
 		
 		addPlayer(playerID);
-		records.get(playerID).addAchievement(achievement);
 		
-		OfflinePlayer op = Bukkit.getOfflinePlayer(playerID);
-		if (op.isOnline()) {
-			((Player) op).sendMessage("You've unlocked the achievement " + ChatColor.GREEN + "["
-					+ achievement + "]" + ChatColor.RESET);
+		if (records.get(playerID).addAchievement(achievement)) {
+			OfflinePlayer op = Bukkit.getOfflinePlayer(playerID);
+			if (op.isOnline()) {
+				((Player) op).sendMessage("You've unlocked the achievement " + ChatColor.GREEN + "["
+						+ achievement + "]" + ChatColor.RESET);
+			}
 		}
 	
 		return true;
