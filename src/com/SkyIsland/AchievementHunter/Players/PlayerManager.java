@@ -10,11 +10,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.entity.Player;
 
 /**
  * Stores information about each player -- metrics and which achievements they've unlocked
@@ -204,6 +208,12 @@ public class PlayerManager {
 		
 		addPlayer(playerID);
 		records.get(playerID).addAchievement(achievement);
+		
+		OfflinePlayer op = Bukkit.getOfflinePlayer(playerID);
+		if (op.isOnline()) {
+			((Player) op).sendMessage("You've unlocked the achievement " + ChatColor.GREEN + "["
+					+ achievement + "]" + ChatColor.RESET);
+		}
 	
 		return true;
 	}

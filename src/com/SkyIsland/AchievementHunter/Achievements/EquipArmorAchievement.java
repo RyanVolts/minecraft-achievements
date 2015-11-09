@@ -7,8 +7,7 @@ import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.InventoryInteractEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
 import com.SkyIsland.AchievementHunter.AchievementHunterPlugin;
 
@@ -22,7 +21,8 @@ public class EquipArmorAchievement extends Achievement {
 	}
 
 	@EventHandler
-	public void interactEvent(InventoryInteractEvent e) {
+	public void interactEvent(InventoryClickEvent e) {
+
 		if (e.isCancelled()) {
 			return;
 		}
@@ -30,22 +30,21 @@ public class EquipArmorAchievement extends Achievement {
 		if (!(e.getWhoClicked() instanceof Player)) {
 			return;
 		}
-		
+
 		if (!playerCache.containsKey(e.getWhoClicked().getUniqueId())) {
 			playerCache.put(e.getWhoClicked().getUniqueId(), false);
 		}
 		
 		if (playerCache.get(e.getWhoClicked().getUniqueId()) == false) {
 			//if they haven't been awarded & cached, actually check
-			Player player = (Player) e.getWhoClicked();
-			for (ItemStack item : player.getInventory().getArmorContents()) {
-				if (item != null && item.getType() != Material.AIR) {
+			if (e.getCursor() != null && e.getCursor().getType() != Material.AIR)
+			if (e.getRawSlot() >= 5 && e.getRawSlot() <= 8) {
 					//have equipment now
+					Player player = (Player) e.getWhoClicked();
 					playerCache.put(player.getUniqueId(), true);
-					AchievementHunterPlugin.plugin.getPlayerManager().getRecord(player.getUniqueId())
-						.addAchievement(getName());
+					AchievementHunterPlugin.plugin.getPlayerManager()
+						.addAchievement(player.getUniqueId(), getName());
 					return;
-				}
 			}
 		}
 	}
