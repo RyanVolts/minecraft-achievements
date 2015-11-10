@@ -41,13 +41,26 @@ public class PlayerManager {
 			ConfigurationSerialization.registerClass(PlayerRecord.class, PlayerRecord.class.getName());
 		}
 		
-		private static Statistic[] vanillaStatistics = new Statistic[]{
-				Statistic.CHEST_OPENED,
-				Statistic.CRAFT_ITEM,
-				Statistic.PLAYER_KILLS,
-				Statistic.SPRINT_ONE_CM,
-				Statistic.WALK_ONE_CM
-				};
+		/**
+		 * The statistics in vanilla minecraft that are stored with player records.
+		 */
+		private static enum vanillaStatistics {
+			CHEST_OPENED(Statistic.CHEST_OPENED),
+			CRAFT_ITEM(Statistic.CRAFT_ITEM),
+			PLAYER_KILLS(Statistic.PLAYER_KILLS),
+			SPRINT_ONE_CM(Statistic.SPRINT_ONE_CM),
+			WALK_ONE_CM(Statistic.WALK_ONE_CM);
+			
+			private Statistic statistic;
+			
+			private vanillaStatistics(Statistic stat) {
+				this.statistic = stat;
+			}
+			
+			public Statistic getStatistic() {
+				return statistic;
+			}
+		}
 		
 		private String name;
 		
@@ -93,8 +106,8 @@ public class PlayerManager {
 		}
 		
 		public void update(Player player) {
-			for (Statistic statistic : vanillaStatistics) {
-				statistics.put(statistic, player.getStatistic(statistic));
+			for (vanillaStatistics stat : vanillaStatistics.values()) {
+				statistics.put(stat.getStatistic(), player.getStatistic(stat.getStatistic()));
 			}
 		}
 		
@@ -266,5 +279,16 @@ public class PlayerManager {
 		}
 	
 		return true;
+	}
+	
+	/**
+	 * Calls the player record for updating by the manager.<br />
+	 * This means that the player's statistics will be captured so they don't have to be online to fetch them.<br />
+	 * For a list of captured statistics, see {@link PlayerRecord#vanillaStatistics}.
+	 * @param player
+	 * @return
+	 */
+	public boolean updatePlayer(Player player) {
+		
 	}
 }
