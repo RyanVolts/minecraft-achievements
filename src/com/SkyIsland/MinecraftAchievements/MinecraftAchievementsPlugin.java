@@ -324,8 +324,11 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 	}
 	
 	private void printPlayerStatus(CommandSender sender, Player player) {
-		sender.sendMessage("Player: " + ChatColor.DARK_BLUE + player.getName()
-				+ ChatColor.RESET + " (" + player.getUniqueId() + ")");
+		sender.sendMessage("Player: " + ChatColor.DARK_BLUE + player.getName() + " - " +
+				(playerManager.isActive(player) ? ChatColor.DARK_GREEN + " Active"
+												: ChatColor.YELLOW + "Not Active")
+				);
+		sender.sendMessage("Id: " + ChatColor.AQUA + " (" + player.getUniqueId() + ")");
 		
 		if (playerManager.isActive(player)) {
 			playerManager.updatePlayer(player);
@@ -344,6 +347,7 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 		if (record.getStatisticsMap().isEmpty()) {
 			sender.sendMessage(ChatColor.GRAY + "No tracked statistics yet!");
 		} else {
+			sender.sendMessage("Statistics:");
 			Map<Statistic, Integer> stats = record.getStatisticsMap();
 			for (Statistic stat : stats.keySet()) {
 				sender.sendMessage(ChatColor.DARK_GRAY + stat.toString() + ChatColor.RESET
