@@ -73,6 +73,10 @@ public class PlayerManager {
 		public boolean hasAchievement(String achievement) {
 			return achievements.contains(achievement);
 		}
+		
+		public String getName() {
+			return this.name;
+		}
 
 		@Override
 		public Map<String, Object> serialize() {

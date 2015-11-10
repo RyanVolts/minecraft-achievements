@@ -1,5 +1,5 @@
 name: MinecraftAchievements
-main: com.SkyIsland.MinecraftAchievements.MinecraftAchievements
+main: com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin
 version: 1.0
 commands:
     report:

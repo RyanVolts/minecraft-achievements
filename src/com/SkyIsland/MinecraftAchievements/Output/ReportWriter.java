@@ -8,9 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
 import com.SkyIsland.MinecraftAchievements.Players.PlayerManager;
 
@@ -34,11 +31,9 @@ public final class ReportWriter {
 		writer.println(getTimeStamp(output.getName()));
 		
 		PlayerManager manager = MinecraftAchievementsPlugin.plugin.getPlayerManager();
-		OfflinePlayer cache;
 		
 		for (UUID id : manager.getPlayers()) {
-			cache = Bukkit.getOfflinePlayer(id);
-			writer.println(cache.getName() + " (" + id + "):");
+			writer.println(manager.getRecord(id).getName() + " (" + id + "):");
 			for (String achievement : manager.getRecord(id).getAchievements()) {
 				writer.println("  -" + achievement);
 			}
