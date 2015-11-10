@@ -111,6 +111,10 @@ public class PlayerManager implements Listener {
 		}
 		
 		private void update(Player player) {
+			if (name == null || name.trim().isEmpty()) {
+				name = player.getName();
+			}
+			
 			for (vanillaStatistics stat : vanillaStatistics.values()) {
 				statistics.put(stat.getStatistic(), player.getStatistic(stat.getStatistic()));
 			}
