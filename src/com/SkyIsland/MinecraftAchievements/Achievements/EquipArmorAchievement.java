@@ -30,6 +30,10 @@ public class EquipArmorAchievement extends ActiveAchievement {
 		if (!(e.getWhoClicked() instanceof Player)) {
 			return;
 		}
+		
+		if (!MinecraftAchievementsPlugin.plugin.getPlayerManager().isActive((Player) e.getWhoClicked())) {
+			return;
+		}
 
 		if (!playerCache.containsKey(e.getWhoClicked().getUniqueId())) {
 			playerCache.put(e.getWhoClicked().getUniqueId(), false);

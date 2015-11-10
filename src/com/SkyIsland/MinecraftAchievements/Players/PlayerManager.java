@@ -314,6 +314,15 @@ public class PlayerManager implements Listener {
 	}
 	
 	/**
+	 * Checks whether a player is active and being tracked
+	 * @param player
+	 * @return
+	 */
+	public boolean isActive(Player player) {
+		return activePlayers.contains(player.getUniqueId());
+	}
+	
+	/**
 	 * Adds the given achievement to the player's record.<br />
 	 * If the player does not have a record, a new one will be created.
 	 * @param playerID
