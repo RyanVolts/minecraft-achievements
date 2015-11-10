@@ -135,8 +135,8 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 		
 		
 		if (!success) {
-			sender.sendMessage("That file already exists!" + ChatColor.RESET 
-					+ "use '/report [filename] true' to overwrite.");
+			sender.sendMessage(ChatColor.YELLOW + "That file already exists!" + ChatColor.RESET);
+			sender.sendMessage("Use '/report " + args[0] + " true' to overwrite it.");
 			return false;
 		}
 		
