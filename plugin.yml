@@ -1,3 +1,7 @@
 name: MinecraftAchievements
 main: com.SkyIsland.MinecraftAchievements.MinecraftAchievements
-version: 1.0    
+version: 1.0
+commands:
+    report:
+        description: Prints out a report of the current player manager's records
+        usage: /report [filename]

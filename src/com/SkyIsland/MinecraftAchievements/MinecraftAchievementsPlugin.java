@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -83,5 +85,20 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 	
 	public PlayerManager getPlayerManager() {
 		return playerManager;
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (cmd.getName().equalsIgnoreCase("report")) {
+			if (args.length != 1) {
+				sender.sendMessage("Please supply a filename to save the report to");
+				return false;
+			}
+			
+			File out = new File(getDataFolder(), args[0]);
+			return true;
+		}
+		
+		return false;
 	}
 }
