@@ -24,6 +24,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
@@ -31,7 +32,7 @@ import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
 /**
  * Stores information about each player -- metrics and which achievements they've unlocked
  * @author Skyler
- *
+ * TODO We currently don't keep our own Statistics, and can't reset them!
  */
 public class PlayerManager implements Listener {
 	
@@ -364,10 +365,31 @@ public class PlayerManager implements Listener {
 	 */
 	public void clear() {
 		records.clear();
+		activePlayers.clear();
+	}
+	
+	public void addActivePlayer(Player player) {
+		addPlayer(player);
+		activePlayers.add(player.getUniqueId());
+	}
+	
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent e) {
+		if (!PlayerManager.deactivatePlayerOnDeath) {
+			return;
+		}
+		
+		if (activePlayers.contains(e.getEntity().getUniqueId())) {
+			updatePlayer(e.getEntity());
+			activePlayers.remove(e.getEntity().getUniqueId());
+		}
 	}
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
-		updatePlayer(e.getPlayer());
+		if (activePlayers.contains(e.getPlayer().getUniqueId())) {
+			updatePlayer(e.getPlayer());
+			activePlayers.remove(e.getPlayer().getUniqueId());
+		}
 	}
 }

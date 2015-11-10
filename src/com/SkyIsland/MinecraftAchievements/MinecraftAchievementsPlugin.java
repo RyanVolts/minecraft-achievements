@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.SkyIsland.MinecraftAchievements.Achievements.EquipArmorAchievement;
@@ -104,6 +105,10 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 		
 		if (cmd.getName().equalsIgnoreCase("cleardata")) {
 			return clear(sender, args);
+		}
+		
+		if (cmd.getName().equalsIgnoreCase("activeplayer")) {
+			return activatePlayer(sender, args);
 		}
 		
 		return false;
@@ -206,6 +211,34 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 		sender.sendMessage(ChatColor.YELLOW + "Player database has been cleared");
 		
 		return true;
+	}
+	
+	private boolean activatePlayer(CommandSender sender, String[] args) {
+		
+		if (args.length != 1) {
+			return false;
+		}
+		
+		if (args[0].equalsIgnoreCase("@a")) {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				activate(player);
+			}
+		} else {
+			@SuppressWarnings("deprecation")
+			Player player = Bukkit.getPlayer(args[0]);
+			if (player == null) {
+				sender.sendMessage(ChatColor.YELLOW + "Unable to locate player " + args[0]);
+				return false;
+			}
+			
+			activate(player);
+		}
+		
+		return true;
+	}
+	
+	private void activate(Player player) {
+		playerManager.addActivePlayer(player);
 	}
 	
 	private boolean savePlayerManager(File saveFile, boolean overwrite) {
