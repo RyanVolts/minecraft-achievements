@@ -5,12 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.SkyIsland.MinecraftAchievements.Achievements.EquipArmorAchievement;
+import com.SkyIsland.MinecraftAchievements.Output.ReportWriter;
 import com.SkyIsland.MinecraftAchievements.Players.PlayerManager;
 
 /**
@@ -90,12 +92,26 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("report")) {
-			if (args.length != 1) {
-				sender.sendMessage("Please supply a filename to save the report to");
+			if (args.length < 1 || args.length > 2) {
+				sender.sendMessage("Please supply a filename to save the report to.");
 				return false;
 			}
 			
 			File out = new File(getDataFolder(), args[0]);
+			boolean overwrite = false;
+			
+			if (args.length == 2 && args[1].equalsIgnoreCase("true")) {
+				overwrite = true;
+			}
+			
+			try {
+				if (!ReportWriter.printReport(out, overwrite)) {
+					sender.sendMessage("That file already exists!" + ChatColor.RESET 
+							+ "use '/report [filename] true' to overwrite.");
+				}
+			} catch (IOException e) {
+				sender.sendMessage(ChatColor.RED + "Failed to write out to file!" + ChatColor.RESET);
+			}
 			return true;
 		}
 		

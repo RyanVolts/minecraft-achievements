@@ -4,4 +4,4 @@ version: 1.0
 commands:
     report:
         description: Prints out a report of the current player manager's records
-        usage: /report [filename]
+        usage: /report [filename] {overwrite}
