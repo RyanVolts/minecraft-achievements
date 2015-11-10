@@ -6,13 +6,27 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
+
+import org.bukkit.Statistic;
 
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
 import com.SkyIsland.MinecraftAchievements.Players.PlayerManager;
 
+/**
+ * Our default report writer.<br />
+ * This writer prints out all achievements from a player as well as some base statistics, which include:
+ * <ul>
+ * <li></li>
+ * <li></li>
+ * <li></li>
+ * <li></li>
+ * </ul>
+ * @author Skyler
+ *
+ */
 public final class ReportWriter {
-	
 	
 	/**
 	 * Prints out a report to the given file.
@@ -37,6 +51,8 @@ public final class ReportWriter {
 			for (String achievement : manager.getRecord(id).getAchievements()) {
 				writer.println("  -" + achievement);
 			}
+
+			writer.println(getStatistics(manager.getRecord(id).getStatisticsMap()));
 			
 		}
 		
@@ -49,5 +65,15 @@ public final class ReportWriter {
 	private static String getTimeStamp(String reportName) {
 		DateFormat fmt = new SimpleDateFormat("hh:mm:ss - MMMM d, YYYY");
 		return "Report " + reportName + " - Generated " + fmt.format(new Date());
+	}
+	
+	private static String getStatistics(Map<Statistic, Integer> stats) {
+		String builder = "";
+		
+		for(Statistic stat : stats.keySet()) {
+			builder += stat.toString() + ": " + stat;
+		}
+		
+		return builder;
 	}
 }

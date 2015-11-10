@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -39,18 +41,30 @@ public class PlayerManager {
 			ConfigurationSerialization.registerClass(PlayerRecord.class, PlayerRecord.class.getName());
 		}
 		
+		private static Statistic[] vanillaStatistics = new Statistic[]{
+				Statistic.CHEST_OPENED,
+				Statistic.CRAFT_ITEM,
+				Statistic.PLAYER_KILLS,
+				Statistic.SPRINT_ONE_CM,
+				Statistic.WALK_ONE_CM
+				};
+		
 		private String name;
 		
 		private List<String> achievements;
 		
+		private Map<Statistic, Integer> statistics;
+		
 		private PlayerRecord(Player player) {
 			this.name = player.getName();
 			achievements = new LinkedList<String>();
+			statistics = new TreeMap<Statistic, Integer>();
 		}
 		
 		private PlayerRecord(String name) {
 			this.name = name;
 			achievements = new LinkedList<String>();
+			statistics = new TreeMap<Statistic, Integer>();
 		}
 		
 		public List<String> getAchievements() {
@@ -76,6 +90,16 @@ public class PlayerManager {
 		
 		public String getName() {
 			return this.name;
+		}
+		
+		public void update(Player player) {
+			for (Statistic statistic : vanillaStatistics) {
+				statistics.put(statistic, player.getStatistic(statistic));
+			}
+		}
+		
+		public Map<Statistic, Integer> getStatisticsMap() {
+			return statistics;
 		}
 
 		@Override
