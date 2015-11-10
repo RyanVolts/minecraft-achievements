@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,13 +21,18 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
+
+import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
 
 /**
  * Stores information about each player -- metrics and which achievements they've unlocked
  * @author Skyler
  *
  */
-public class PlayerManager {
+public class PlayerManager implements Listener {
 	
 	/**
 	 * Class used for storing any additional information about a player we may need.
@@ -105,7 +111,7 @@ public class PlayerManager {
 			return this.name;
 		}
 		
-		public void update(Player player) {
+		private void update(Player player) {
 			for (vanillaStatistics stat : vanillaStatistics.values()) {
 				statistics.put(stat.getStatistic(), player.getStatistic(stat.getStatistic()));
 			}
@@ -122,16 +128,40 @@ public class PlayerManager {
 			map.put("achievements", achievements);
 			map.put("display", name);
 			
+			Map<String, Integer> stats = new HashMap<String, Integer>();
+			
+			for (Statistic stat : statistics.keySet()) {
+				stats.put(stat.name(), statistics.get(stat)); //convert our map to string keys
+			}
+			
+			map.put("tracked-stats", stats);
+			
 			return map;
 		}
 
 	    @SuppressWarnings("unchecked")
 		public static PlayerRecord valueOf(Map<String, Object> configMap) {
+	    	
+	    	if (!configMap.containsKey("display") || !configMap.containsKey("achievements")
+	    			|| !configMap.containsKey("tracked-stats")) {
+	    		MinecraftAchievementsPlugin.plugin.getLogger().warning(
+	    				"Unable to load player record, as it's missing keys" +
+	    				(configMap.containsKey("display") ? ": " + configMap.get("display")
+	    				: "!")
+	    				);
+	    	}
+	    	
 	    	String name = (String) configMap.get("display");
 	    	
 	        PlayerRecord record = new PlayerRecord(name);
 	        
 	        record.achievements = (List<String>) configMap.get("achievements");
+	        
+	        //load up stats from map of ordinals to values
+	        Map<String, Integer> stats = (Map<String, Integer>) configMap.get("tracked-stats");
+	        for (String key : stats.keySet()) {
+	        	record.statistics.put(Statistic.valueOf(key), stats.get(key));
+	        }
 	        
 	        return record;
 	    }
@@ -146,6 +176,8 @@ public class PlayerManager {
 	 */
 	public PlayerManager() {
 		this.records = new HashMap<UUID, PlayerRecord>();
+		
+		Bukkit.getPluginManager().registerEvents(this, MinecraftAchievementsPlugin.plugin);
 	}
 	
 	/**
@@ -286,9 +318,20 @@ public class PlayerManager {
 	 * This means that the player's statistics will be captured so they don't have to be online to fetch them.<br />
 	 * For a list of captured statistics, see {@link PlayerRecord#vanillaStatistics}.
 	 * @param player
-	 * @return
+	 * @return true if the player was added to the manager because of this call
 	 */
 	public boolean updatePlayer(Player player) {
+		if (records.containsKey(player.getUniqueId())) {
+			records.get(player.getUniqueId()).update(player);
+			return false;
+		}
 		
+		records.get(player.getUniqueId()).update(player);
+		return true;
+	}
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent e) {
+		updatePlayer(e.getPlayer());
 	}
 }

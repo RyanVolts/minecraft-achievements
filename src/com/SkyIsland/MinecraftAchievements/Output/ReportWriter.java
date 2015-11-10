@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
@@ -16,13 +18,10 @@ import com.SkyIsland.MinecraftAchievements.Players.PlayerManager;
 
 /**
  * Our default report writer.<br />
- * This writer prints out all achievements from a player as well as some base statistics, which include:
- * <ul>
- * <li></li>
- * <li></li>
- * <li></li>
- * <li></li>
- * </ul>
+ * This writer prints out all achievements from a player as well as some base statistics, which include<br />
+ * those defined in 
+ * {@link com.SkyIsland.MinecraftAchievements.Players.PlayerManager.PlayerRecord#vanillaStatistics
+ * vanillaStatistics}
  * @author Skyler
  *
  */
@@ -39,6 +38,8 @@ public final class ReportWriter {
 		if (output.exists()) {
 			return false;
 		}
+		
+		updatePlayers();
 		
 		PrintWriter writer = new PrintWriter(output);
 		
@@ -75,5 +76,21 @@ public final class ReportWriter {
 		}
 		
 		return builder;
+	}
+	
+	/**
+	 * Goes through players and attempts to update them (if they're online)
+	 */
+	private static void updatePlayers() {
+		PlayerManager manager = MinecraftAchievementsPlugin.plugin.getPlayerManager();
+		OfflinePlayer cache;
+		
+		for (UUID id : manager.getPlayers()) {
+			cache = Bukkit.getOfflinePlayer(id);
+			if (cache.isOnline()) {
+				//update their record
+				manager.updatePlayer(cache.getPlayer());
+			}
+		}
 	}
 }
