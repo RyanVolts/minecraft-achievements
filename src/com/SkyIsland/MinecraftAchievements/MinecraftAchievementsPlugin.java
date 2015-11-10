@@ -35,6 +35,9 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 		
 		this.playerManager = new PlayerManager();
 		
+		if (!getDataFolder().exists()) {
+			getDataFolder().mkdirs();
+		}
 		if (!new File(getDataFolder(), playerSaveFile).exists()) {
 			getLogger().info("Unable to find player database, so one will be created...");
 		}

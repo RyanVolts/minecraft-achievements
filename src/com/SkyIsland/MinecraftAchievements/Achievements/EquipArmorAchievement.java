@@ -43,7 +43,7 @@ public class EquipArmorAchievement extends Achievement {
 					Player player = (Player) e.getWhoClicked();
 					playerCache.put(player.getUniqueId(), true);
 					MinecraftAchievementsPlugin.plugin.getPlayerManager()
-						.addAchievement(player.getUniqueId(), getName());
+						.addAchievement(player, getName());
 					return;
 			}
 		}
