@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
+import com.SkyIsland.MinecraftAchievements.Scheduler.Scheduler;
 import com.SkyIsland.MinecraftAchievements.Scheduler.Tickable;
 
 /**
@@ -17,15 +18,17 @@ import com.SkyIsland.MinecraftAchievements.Scheduler.Tickable;
  */
 public abstract class TimedAchievement extends PassiveAchievement implements Tickable {
 
-	private int ticks;
+	private int time;
 	
-	protected TimedAchievement(String name, int ticksTillAwarded) {
+	protected TimedAchievement(String name, int secondsTillAwarded) {
 		super(name);
-		ticks = ticksTillAwarded;
+		time = secondsTillAwarded;
+		
+		Scheduler.getScheduler().schedule(this, this, secondsTillAwarded);
 	}
 	
-	public int getTicks() {
-		return ticks;
+	public int getTime() {
+		return time;
 	}
 	
 	@Override
