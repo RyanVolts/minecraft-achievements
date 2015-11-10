@@ -324,6 +324,12 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 	}
 	
 	private void printPlayerStatus(CommandSender sender, Player player) {
+		
+		if (!playerManager.hasPlayer(player.getUniqueId())) {
+			sender.sendMessage(ChatColor.YELLOW + "No data for that player!");
+			return;
+		}
+		
 		sender.sendMessage("Player: " + ChatColor.DARK_BLUE + player.getName() + " - " +
 				(playerManager.isActive(player) ? ChatColor.DARK_GREEN + " Active"
 												: ChatColor.YELLOW + "Not Active")
