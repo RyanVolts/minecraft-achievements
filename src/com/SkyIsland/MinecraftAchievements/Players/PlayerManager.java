@@ -59,6 +59,7 @@ public class PlayerManager implements Listener {
 		 */
 		private static enum vanillaStatistics {
 			CHEST_OPENED(Statistic.CHEST_OPENED),
+			TRAPPED_CHESTS_OPENED(Statistic.TRAPPED_CHEST_TRIGGERED),
 			PLAYER_KILLS(Statistic.PLAYER_KILLS),
 			SPRINT_ONE_CM(Statistic.SPRINT_ONE_CM),
 			WALK_ONE_CM(Statistic.WALK_ONE_CM);
