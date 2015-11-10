@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
 
-public class EquipArmorAchievement extends Achievement {
+public class EquipArmorAchievement extends ActiveAchievement {
 
 	private Map<UUID, Boolean> playerCache; //faster lookups
 	

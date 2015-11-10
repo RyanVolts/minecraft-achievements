@@ -1,13 +1,9 @@
 package com.SkyIsland.MinecraftAchievements.Achievements;
 
-import org.bukkit.event.Listener;
-
 /**
- * An achievement handles figuring out if players have unlocked themselves.<br />
- * They are responsible for updating the player records kept by the player manager and for actually
- * doing the listening and figuring out if the achievement requirements have been met.
+ * An achievement handles figuring out if players have unlocked themselves.
  */
-public abstract class Achievement implements Listener {
+public abstract class Achievement {
 
 	private String name;
 	
