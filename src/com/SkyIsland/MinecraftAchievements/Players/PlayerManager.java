@@ -355,7 +355,8 @@ public class PlayerManager implements Listener {
 	/**
 	 * Calls the player record for updating by the manager.<br />
 	 * This means that the player's statistics will be captured so they don't have to be online to fetch them.<br />
-	 * For a list of captured statistics, see {@link PlayerRecord#vanillaStatistics}.
+	 * For a list of captured statistics, see {@link PlayerRecord#vanillaStatistics}.<br />
+	 * <b>Note:</b> This does not check if the player is active before performing the update!
 	 * @param player
 	 * @return true if the player was added to the manager because of this call
 	 */
