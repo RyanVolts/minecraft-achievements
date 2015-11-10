@@ -331,6 +331,7 @@ public class PlayerManager implements Listener {
 			return false;
 		}
 		
+		records.put(player.getUniqueId(), new PlayerRecord(player));
 		records.get(player.getUniqueId()).update(player);
 		return true;
 	}
