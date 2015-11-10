@@ -3,9 +3,12 @@ package com.SkyIsland.MinecraftAchievements;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Statistic;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -15,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.SkyIsland.MinecraftAchievements.Achievements.EquipArmorAchievement;
 import com.SkyIsland.MinecraftAchievements.Output.ReportWriter;
 import com.SkyIsland.MinecraftAchievements.Players.PlayerManager;
+import com.SkyIsland.MinecraftAchievements.Players.PlayerManager.PlayerRecord;
 
 /**
  * Main plugin class.<br />
@@ -109,6 +113,10 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 		
 		if (cmd.getName().equalsIgnoreCase("activateplayer")) {
 			return activatePlayer(sender, args);
+		}
+		
+		if (cmd.getName().equalsIgnoreCase("printachievementstatus")) {
+			return printStatus(sender, args);
 		}
 		
 		return false;
@@ -257,5 +265,86 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Prints general status of the session.
+	 * @param sender
+	 * @param args
+	 * @return
+	 */
+	private boolean printStatus(CommandSender sender, String[] args) {
+		
+		if (args.length > 1) {
+			return false;
+		}
+		
+		if (args.length == 1) {
+			//player lookup
+			@SuppressWarnings("deprecation")
+			Player player = Bukkit.getPlayer(args[0]);
+			if (player == null) {
+				sender.sendMessage(ChatColor.YELLOW + "Unable to find player " + args[0]);
+				return false;
+			}
+			
+			printPlayerStatus(sender, player);
+			return true;
+		}
+		
+		//print session status
+		sender.sendMessage("Players: " 
+				+ ChatColor.DARK_GREEN + playerManager.getActivePlayers().size() + ChatColor.RESET + " active | " 
+				+ ChatColor.DARK_BLUE + playerManager.getPlayers().size() + ChatColor.RESET + " total");
+		
+		if (!playerManager.getActivePlayers().isEmpty()) {
+			sender.sendMessage("Active Players: ");
+			
+			String msg = "";
+			Player cache;
+			boolean color = true;
+			
+			for (UUID id : playerManager.getActivePlayers()) {
+				cache = Bukkit.getPlayer(id);
+				if (cache == null) {
+					continue;
+				}
+				msg += (color ? ChatColor.DARK_PURPLE : ChatColor.DARK_RED);
+				msg += cache.getName() + "  ";
+				color = !color;
+			}
+			
+			msg = msg.trim() + ChatColor.RESET;
+			
+			sender.sendMessage(msg);
+		}
+				
+		
+		return true;
+	}
+	
+	private void printPlayerStatus(CommandSender sender, Player player) {
+		sender.sendMessage("Player: " + ChatColor.DARK_BLUE + player.getName()
+				+ ChatColor.RESET + " (" + player.getUniqueId() + ")");
+		
+		PlayerRecord record = playerManager.getRecord(player.getUniqueId());
+		if (record.getAchievements().isEmpty()) {
+			sender.sendMessage(ChatColor.GRAY + "No Achievements!");
+		} else {
+			sender.sendMessage("Achievements:");
+			for (String achievement : record.getAchievements()) {
+				sender.sendMessage("  -" + ChatColor.DARK_PURPLE + achievement);
+			}
+		}
+		
+		if (record.getStatisticsMap().isEmpty()) {
+			sender.sendMessage(ChatColor.GRAY + "No tracked statistics yet!");
+		} else {
+			Map<Statistic, Integer> stats = record.getStatisticsMap();
+			for (Statistic stat : stats.keySet()) {
+				sender.sendMessage(ChatColor.DARK_GRAY + stat.toString() + ChatColor.RESET
+						+ ": " + ChatColor.DARK_GREEN + stats.get(stat));
+			}
+		}
 	}
 }
