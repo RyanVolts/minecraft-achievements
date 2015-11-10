@@ -1,4 +1,4 @@
-package com.SkyIsland.AchievementHunter.Players;
+package com.SkyIsland.MinecraftAchievements.Players;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,4 +1,4 @@
-package com.SkyIsland.AchievementHunter.Achievements;
+package com.SkyIsland.MinecraftAchievements.Achievements;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-import com.SkyIsland.AchievementHunter.AchievementHunterPlugin;
+import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
 
 public class EquipArmorAchievement extends Achievement {
 
@@ -42,7 +42,7 @@ public class EquipArmorAchievement extends Achievement {
 					//have equipment now
 					Player player = (Player) e.getWhoClicked();
 					playerCache.put(player.getUniqueId(), true);
-					AchievementHunterPlugin.plugin.getPlayerManager()
+					MinecraftAchievementsPlugin.plugin.getPlayerManager()
 						.addAchievement(player.getUniqueId(), getName());
 					return;
 			}

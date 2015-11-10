@@ -1,4 +1,4 @@
-package com.SkyIsland.AchievementHunter.Achievements;
+package com.SkyIsland.MinecraftAchievements.Achievements;
 
 import org.bukkit.event.Listener;
 

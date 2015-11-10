@@ -1,4 +1,4 @@
-package com.SkyIsland.AchievementHunter;
+package com.SkyIsland.MinecraftAchievements;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,8 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.SkyIsland.AchievementHunter.Achievements.EquipArmorAchievement;
-import com.SkyIsland.AchievementHunter.Players.PlayerManager;
+import com.SkyIsland.MinecraftAchievements.Achievements.EquipArmorAchievement;
+import com.SkyIsland.MinecraftAchievements.Players.PlayerManager;
 
 /**
  * Main plugin class.<br />
@@ -17,11 +17,11 @@ import com.SkyIsland.AchievementHunter.Players.PlayerManager;
  * @author Skyler
  *
  */
-public class AchievementHunterPlugin extends JavaPlugin {
+public class MinecraftAchievementsPlugin extends JavaPlugin {
 	
 	private static final String playerSaveFile = "players.yml"; 
 	
-	public static AchievementHunterPlugin plugin;
+	public static MinecraftAchievementsPlugin plugin;
 	
 	private PlayerManager playerManager;
 	
