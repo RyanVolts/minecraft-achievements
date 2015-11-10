@@ -3,7 +3,13 @@ package com.SkyIsland.MinecraftAchievements.Output;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
 import com.SkyIsland.MinecraftAchievements.Players.PlayerManager;
@@ -24,8 +30,18 @@ public final class ReportWriter {
 		}
 		
 		PrintWriter writer = new PrintWriter(output);
+		
+		writer.println(getTimeStamp(output.getName()));
+		
 		PlayerManager manager = MinecraftAchievementsPlugin.plugin.getPlayerManager();
+		OfflinePlayer cache;
+		
 		for (UUID id : manager.getPlayers()) {
+			cache = Bukkit.getOfflinePlayer(id);
+			writer.println(cache.getName() + " (" + id + "):");
+			for (String achievement : manager.getRecord(id).getAchievements()) {
+				writer.println("  -" + achievement);
+			}
 			
 		}
 		
@@ -35,4 +51,8 @@ public final class ReportWriter {
 		return true;
 	}
 	
+	private static String getTimeStamp(String reportName) {
+		DateFormat fmt = new SimpleDateFormat("hh:mm:ss - MMMM d, YYYY");
+		return "Report " + reportName + " - Generated " + fmt.format(new Date());
+	}
 }
