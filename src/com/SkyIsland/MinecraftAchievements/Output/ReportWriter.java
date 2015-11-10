@@ -2,6 +2,11 @@ package com.SkyIsland.MinecraftAchievements.Output;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.UUID;
+
+import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
+import com.SkyIsland.MinecraftAchievements.Players.PlayerManager;
 
 public final class ReportWriter {
 	
@@ -18,6 +23,14 @@ public final class ReportWriter {
 			return false;
 		}
 		
+		PrintWriter writer = new PrintWriter(output);
+		PlayerManager manager = MinecraftAchievementsPlugin.plugin.getPlayerManager();
+		for (UUID id : manager.getPlayers()) {
+			
+		}
+		
+		
+		writer.close();
 		
 		return true;
 	}

@@ -8,11 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -40,9 +39,17 @@ public class PlayerManager {
 			ConfigurationSerialization.registerClass(PlayerRecord.class, PlayerRecord.class.getName());
 		}
 		
+		private String name;
+		
 		private List<String> achievements;
 		
-		private PlayerRecord() {
+		private PlayerRecord(Player player) {
+			this.name = player.getName();
+			achievements = new LinkedList<String>();
+		}
+		
+		private PlayerRecord(String name) {
+			this.name = name;
 			achievements = new LinkedList<String>();
 		}
 		
@@ -72,13 +79,16 @@ public class PlayerManager {
 			Map<String, Object> map = new HashMap<String, Object>();
 			
 			map.put("achievements", achievements);
+			map.put("display", name);
 			
 			return map;
 		}
 
 	    @SuppressWarnings("unchecked")
 		public static PlayerRecord valueOf(Map<String, Object> configMap) {
-	        PlayerRecord record = new PlayerRecord();
+	    	String name = (String) configMap.get("display");
+	    	
+	        PlayerRecord record = new PlayerRecord(name);
 	        
 	        record.achievements = (List<String>) configMap.get("achievements");
 	        
@@ -187,14 +197,18 @@ public class PlayerManager {
 	 * @param playerID
 	 * @return true if a new record was created, false otherwise
 	 */
-	public boolean addPlayer(UUID playerID) {
-		if (records.containsKey(playerID)) {
+	public boolean addPlayer(Player player) {
+		if (records.containsKey(player.getUniqueId())) {
 			return false;
 		}
 		
-		records.put(playerID, new PlayerRecord());
+		records.put(player.getUniqueId(), new PlayerRecord(player));
 		
 		return true;
+	}
+	
+	public Set<UUID> getPlayers() {
+		return records.keySet();
 	}
 	
 	/**
@@ -204,28 +218,23 @@ public class PlayerManager {
 	 * @param achievement
 	 * @return true if a new record was created for the player. False if it already existed
 	 */
-	public boolean addAchievement(UUID playerID, String achievement) {
-		if (records.containsKey(playerID)) {
-			if (records.get(playerID).addAchievement(achievement)) {
+	public boolean addAchievement(Player player, String achievement) {
+		if (records.containsKey(player.getUniqueId())) {
+			if (records.get(player.getUniqueId()).addAchievement(achievement)) {
 			
-				OfflinePlayer op = Bukkit.getOfflinePlayer(playerID);
-				if (op.isOnline()) {
-					((Player) op).sendMessage("You've unlocked the achievement " + ChatColor.GREEN + "["
-							+ achievement + "]" + ChatColor.RESET);
-				}
+				player.sendMessage("You've unlocked the achievement " + ChatColor.GREEN + "["
+						+ achievement + "]" + ChatColor.RESET);
+				
 				
 			}
 			return false;
 		}
 		
-		addPlayer(playerID);
+		addPlayer(player);
 		
-		if (records.get(playerID).addAchievement(achievement)) {
-			OfflinePlayer op = Bukkit.getOfflinePlayer(playerID);
-			if (op.isOnline()) {
-				((Player) op).sendMessage("You've unlocked the achievement " + ChatColor.GREEN + "["
-						+ achievement + "]" + ChatColor.RESET);
-			}
+		if (records.get(player.getUniqueId()).addAchievement(achievement)) {
+			player.sendMessage("You've unlocked the achievement " + ChatColor.GREEN + "["
+					+ achievement + "]" + ChatColor.RESET);
 		}
 	
 		return true;
