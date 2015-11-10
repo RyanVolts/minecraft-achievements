@@ -107,7 +107,7 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 			return clear(sender, args);
 		}
 		
-		if (cmd.getName().equalsIgnoreCase("activeplayer")) {
+		if (cmd.getName().equalsIgnoreCase("activateplayer")) {
 			return activatePlayer(sender, args);
 		}
 		
@@ -223,6 +223,7 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				activate(player);
 			}
+			sender.sendMessage(ChatColor.GREEN + "Activated " + Bukkit.getOnlinePlayers().size() + " players!");
 		} else {
 			@SuppressWarnings("deprecation")
 			Player player = Bukkit.getPlayer(args[0]);
@@ -232,6 +233,7 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 			}
 			
 			activate(player);
+			sender.sendMessage(ChatColor.GREEN + "Activated " + args[0] + "!");
 		}
 		
 		return true;

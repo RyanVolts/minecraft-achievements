@@ -37,7 +37,7 @@ public final class ReportWriter {
 	 * @return False if overwrite is false and the file exists. True otherwise;
 	 */
 	public static boolean printReport(File output, boolean overwrite) throws IOException {
-		if (output.exists()) {
+		if (!overwrite && output.exists()) {
 			return false;
 		}
 		
@@ -91,7 +91,7 @@ public final class ReportWriter {
 		PlayerManager manager = MinecraftAchievementsPlugin.plugin.getPlayerManager();
 		OfflinePlayer cache;
 		
-		for (UUID id : manager.getPlayers()) {
+		for (UUID id : manager.getActivePlayers()) {
 			cache = Bukkit.getOfflinePlayer(id);
 			if (cache.isOnline()) {
 				//update their record
