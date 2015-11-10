@@ -54,6 +54,8 @@ public final class ReportWriter {
 			for (String achievement : manager.getRecord(id).getAchievements()) {
 				writer.println("  -" + achievement);
 			}
+			
+			writer.println("  ================");
 
 			for (String line : getStatistics(manager.getRecord(id).getStatisticsMap())) {
 				writer.println(line);
@@ -76,7 +78,7 @@ public final class ReportWriter {
 		List<String> statsList = new LinkedList<String>();
 		
 		for(Statistic stat : stats.keySet()) {
-			statsList.add(stat.toString() + ": " + stat);
+			statsList.add("  " + stat.toString() + ": " + stats.get(stat));
 		}
 		
 		return statsList;
