@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,7 +55,9 @@ public final class ReportWriter {
 				writer.println("  -" + achievement);
 			}
 
-			writer.println(getStatistics(manager.getRecord(id).getStatisticsMap()));
+			for (String line : getStatistics(manager.getRecord(id).getStatisticsMap())) {
+				writer.println(line);
+			}
 			
 		}
 		
@@ -68,14 +72,14 @@ public final class ReportWriter {
 		return "Report " + reportName + " - Generated " + fmt.format(new Date());
 	}
 	
-	private static String getStatistics(Map<Statistic, Integer> stats) {
-		String builder = "";
+	private static List<String> getStatistics(Map<Statistic, Integer> stats) {
+		List<String> statsList = new LinkedList<String>();
 		
 		for(Statistic stat : stats.keySet()) {
-			builder += stat.toString() + ": " + stat;
+			statsList.add(stat.toString() + ": " + stat);
 		}
 		
-		return builder;
+		return statsList;
 	}
 	
 	/**

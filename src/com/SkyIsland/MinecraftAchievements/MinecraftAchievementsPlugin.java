@@ -31,9 +31,8 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 	
 	@Override
 	public void onLoad() {
+		plugin = this;
 		PlayerManager.PlayerRecord.registerAliases();
-		
-		this.playerManager = new PlayerManager();
 		
 		if (!getDataFolder().exists()) {
 			getDataFolder().mkdirs();
@@ -45,11 +44,12 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-			plugin = this;
+		
+		this.playerManager = new PlayerManager();
 			
-			registerAchievements();
+		registerAchievements();
 			
-			loadPlayerManager();
+		loadPlayerManager();
 	}
 	
 	@Override
@@ -107,14 +107,22 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 				overwrite = true;
 			}
 			
+			boolean success = false;
 			try {
-				if (!ReportWriter.printReport(out, overwrite)) {
-					sender.sendMessage("That file already exists!" + ChatColor.RESET 
-							+ "use '/report [filename] true' to overwrite.");
-				}
+				success = ReportWriter.printReport(out, overwrite);
 			} catch (IOException e) {
 				sender.sendMessage(ChatColor.RED + "Failed to write out to file!" + ChatColor.RESET);
 			}
+			
+			
+			if (!success) {
+				sender.sendMessage("That file already exists!" + ChatColor.RESET 
+						+ "use '/report [filename] true' to overwrite.");
+				return false;
+			}
+			
+			//print was successful
+			sender.sendMessage(ChatColor.GREEN + "Your report has been generated!" + ChatColor.RESET);
 			return true;
 		}
 		

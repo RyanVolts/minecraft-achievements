@@ -52,7 +52,6 @@ public class PlayerManager implements Listener {
 		 */
 		private static enum vanillaStatistics {
 			CHEST_OPENED(Statistic.CHEST_OPENED),
-			CRAFT_ITEM(Statistic.CRAFT_ITEM),
 			PLAYER_KILLS(Statistic.PLAYER_KILLS),
 			SPRINT_ONE_CM(Statistic.SPRINT_ONE_CM),
 			WALK_ONE_CM(Statistic.WALK_ONE_CM);
@@ -149,6 +148,7 @@ public class PlayerManager implements Listener {
 	    				(configMap.containsKey("display") ? ": " + configMap.get("display")
 	    				: "!")
 	    				);
+	    		return new PlayerRecord("");
 	    	}
 	    	
 	    	String name = (String) configMap.get("display");
@@ -207,12 +207,12 @@ public class PlayerManager implements Listener {
 		for (String key : config.getKeys(false)) {
 			section = config.getConfigurationSection(key);
 			
-			if (!section.contains("record")) {
-				throw new InvalidConfigurationException("Missing a key in player record: " + key);
-			}
-			
 			id = UUID.fromString(key);
 			record = (PlayerRecord) section.get("record");
+			
+			if (record.getName() == null || record.getName().trim().isEmpty()) {
+				MinecraftAchievementsPlugin.plugin.getLogger().warning("Skipping bad record...");
+			}
 			
 			records.put(id, record);
 		}
