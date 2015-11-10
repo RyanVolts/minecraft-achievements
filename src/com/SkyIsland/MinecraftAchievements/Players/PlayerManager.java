@@ -280,6 +280,7 @@ public class PlayerManager implements Listener {
 		}
 		
 		records.put(player.getUniqueId(), new PlayerRecord(player));
+		records.get(player.getUniqueId()).update(player);
 		
 		return true;
 	}
