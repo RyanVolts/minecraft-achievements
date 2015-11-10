@@ -1,7 +1,19 @@
 name: MinecraftAchievements
 main: com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin
 version: 1.0
+permissions:
+    minecraftmchievements.admin:
+        default: op
 commands:
     report:
         description: Prints out a report of the current player manager's records
         usage: /report [filename] {overwrite}
+        permission: minecraftmchievements.admin
+    playersnapshot:
+        description: Takes a snapshot of the player database and stores it at the given location
+        usage: /snapshot [filename] {overwrite}
+        permission: minecraftmchievements.admin
+    cleardata:
+        description: Clears the player database of all player records kept by the plugin.
+        usage: /cleardata
+        permission: minecraftmchievements.admin

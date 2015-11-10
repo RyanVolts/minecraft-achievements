@@ -55,11 +55,7 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		File saveFile = new File(getDataFolder(), playerSaveFile);
-		try {
-			playerManager.save(saveFile, true);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		savePlayerManager(saveFile, true); //always overwrite when saving database
 	}
 	
 	/**
@@ -95,37 +91,132 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("report")) {
-			if (args.length < 1 || args.length > 2) {
-				sender.sendMessage("Please supply a filename to save the report to.");
-				return false;
-			}
-			
-			File out = new File(getDataFolder(), args[0]);
-			boolean overwrite = false;
-			
-			if (args.length == 2 && args[1].equalsIgnoreCase("true")) {
-				overwrite = true;
-			}
-			
-			boolean success = false;
-			try {
-				success = ReportWriter.printReport(out, overwrite);
-			} catch (IOException e) {
-				sender.sendMessage(ChatColor.RED + "Failed to write out to file!" + ChatColor.RESET);
-			}
-			
-			
-			if (!success) {
-				sender.sendMessage("That file already exists!" + ChatColor.RESET 
-						+ "use '/report [filename] true' to overwrite.");
-				return false;
-			}
-			
-			//print was successful
-			sender.sendMessage(ChatColor.GREEN + "Your report has been generated!" + ChatColor.RESET);
-			return true;
+			return report(sender, args);
+		}
+		
+		if (cmd.getName().equalsIgnoreCase("playersnapshot")) {
+			return snapshot(sender, args);
+		}
+		
+		if (cmd.getName().equalsIgnoreCase("cleardata")) {
+			return clear(sender, args);
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Processes a report command.<br />
+	 * This command pritns out a report of the player database, including achievements and tracked statistics.
+	 * @param sender
+	 * @param args
+	 * @return
+	 * @see {@link com.SkyIsland.MinecraftAchievements.Output.ReportWriter ReportWriter}
+	 */
+	private boolean report(CommandSender sender, String[] args) {
+		if (args.length < 1 || args.length > 2) {
+			sender.sendMessage("Please supply a filename to save the report to.");
+			return false;
+		}
+		
+		File out = new File(getDataFolder(), args[0]);
+		boolean overwrite = false;
+		
+		if (args.length == 2 && args[1].equalsIgnoreCase("true")) {
+			overwrite = true;
+		}
+		
+		boolean success = false;
+		try {
+			success = ReportWriter.printReport(out, overwrite);
+		} catch (IOException e) {
+			sender.sendMessage(ChatColor.RED + "Failed to write out to file!" + ChatColor.RESET);
+		}
+		
+		
+		if (!success) {
+			sender.sendMessage("That file already exists!" + ChatColor.RESET 
+					+ "use '/report [filename] true' to overwrite.");
+			return false;
+		}
+		
+		//print was successful
+		sender.sendMessage(ChatColor.GREEN + "Your report has been generated!" + ChatColor.RESET);
+		return true;
+	}
+	
+	/**
+	 * Processes the snapshot command.<br />
+	 * This takes a snapshot of the player database, saving it to a file.
+	 * @param sender
+	 * @param args
+	 * @return
+	 */
+	private boolean snapshot(CommandSender sender, String[] args) {
+		if (args.length != 1 && args.length != 2) {
+			sender.sendMessage("Please provide a filename to save the snapshot to!");
+			return false;
+		}
+		
+		boolean overwrite = false;
+		String fileName = formatFileName(args[0]);
+	
+		if (args.length == 2 && args[1].equalsIgnoreCase("true")) {
+			overwrite = true;
+		}
+		
+		File saveFile = new File(getDataFolder(), fileName);
+		if (savePlayerManager(saveFile, overwrite)) {
+			sender.sendMessage(ChatColor.GREEN + "Snapshot saved successfully!" + ChatColor.RESET);
+		} else {
+			sender.sendMessage(ChatColor.RED + "There was a problem saving the snapshot!" + ChatColor.RESET);
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Adjusts filename to fit print criteria.<br />
+	 * This method performs the checks to see if it violates the protocol before making changes.
+	 * @param rawFileName
+	 * @return
+	 */
+	private String formatFileName(String rawFileName) {
+		if (rawFileName.endsWith(".yml")) {
+			return rawFileName;
+		}
+		
+		rawFileName += ".yml";
+		
+		return rawFileName;
+	}
+	
+	private boolean clear(CommandSender sender, String[] args) {
+		
+		if (args.length != 0) {
+			return false;
+		}
+		
+		playerManager.clear();
+		
+		sender.sendMessage(ChatColor.YELLOW + "Player database has been cleared");
+		
+		return true;
+	}
+	
+	private boolean savePlayerManager(File saveFile, boolean overwrite) {
+		if (!overwrite && saveFile.exists()) {
+			getLogger().warning("Unable to save player manager file because the file exists!");
+			return false;
+		}
+		
+		try {
+			playerManager.save(saveFile, true);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
 	}
 }

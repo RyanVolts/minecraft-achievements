@@ -334,6 +334,13 @@ public class PlayerManager implements Listener {
 		return true;
 	}
 	
+	/**
+	 * Clears the player database completely.
+	 */
+	public void clear() {
+		records.clear();
+	}
+	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		updatePlayer(e.getPlayer());
