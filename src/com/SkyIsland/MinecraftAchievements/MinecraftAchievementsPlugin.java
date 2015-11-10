@@ -80,6 +80,10 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 		}
 	}
 	
+	/**
+	 * Goes through and registers achievements.<br />
+	 * Not a very good solution...
+	 */
 	private void registerAchievements() {
 		Bukkit.getPluginManager().registerEvents(new EquipArmorAchievement(), this);
 	}

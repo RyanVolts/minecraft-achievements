@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,11 @@ import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
  *
  */
 public class PlayerManager implements Listener {
+	
+	/**
+	 * Constant as to whether 'active players' should only include people who haven't died yet.
+	 */
+	private static final boolean deactivatePlayerOnDeath = true;
 	
 	/**
 	 * Class used for storing any additional information about a player we may need.
@@ -175,11 +181,14 @@ public class PlayerManager implements Listener {
 	
 	private Map<UUID, PlayerRecord> records;
 	
+	private Set<UUID> activePlayers;
+	
 	/**
 	 * Constructs an empty player manager with no player records.
 	 */
 	public PlayerManager() {
 		this.records = new HashMap<UUID, PlayerRecord>();
+		this.activePlayers = new HashSet<UUID>();
 		
 		Bukkit.getPluginManager().registerEvents(this, MinecraftAchievementsPlugin.plugin);
 	}
@@ -285,8 +294,22 @@ public class PlayerManager implements Listener {
 		return true;
 	}
 	
+	/**
+	 * Gets ALL players in the database, regardless of active status.
+	 * @return
+	 * @see #getActivePlayers()
+	 */
 	public Set<UUID> getPlayers() {
 		return records.keySet();
+	}
+	
+	/**
+	 * Returns <b>only</b> active players.
+	 * @return
+	 * @see #getPlayers()
+	 */
+	public Set<UUID> getActivePlayers() {
+		return activePlayers;
 	}
 	
 	/**
