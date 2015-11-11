@@ -20,8 +20,8 @@ public abstract class TimedAchievement extends PassiveAchievement implements Tic
 
 	private int time;
 	
-	protected TimedAchievement(String name, int secondsTillAwarded) {
-		super(name);
+	protected TimedAchievement(String name, String description, int point_value, int secondsTillAwarded) {
+		super(name, description, point_value);
 		time = secondsTillAwarded;
 		
 		Scheduler.getScheduler().schedule(this, this, secondsTillAwarded);

@@ -9,8 +9,8 @@ import org.bukkit.event.Listener;
  */
 public abstract class ActiveAchievement extends Achievement implements Listener {
 
-	protected ActiveAchievement(String name) {
-		super(name);
+	protected ActiveAchievement(String name, String description, int point_value) {
+		super(name, description, point_value);
 	}
 	
 }

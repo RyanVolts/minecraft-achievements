@@ -16,8 +16,8 @@ import com.SkyIsland.MinecraftAchievements.Players.PlayerManager;
  */
 public abstract class PassiveAchievement extends Achievement implements Listener {
 
-	protected PassiveAchievement(String name) {
-		super(name);
+	protected PassiveAchievement(String name, String description, int point_value) {
+		super(name, description, point_value);
 	}
 	
 	public void awardToPlayers(Collection<Player> players) {
