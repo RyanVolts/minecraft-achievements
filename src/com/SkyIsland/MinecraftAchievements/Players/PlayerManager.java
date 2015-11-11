@@ -14,7 +14,6 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -42,6 +41,16 @@ public class PlayerManager implements Listener {
 	 */
 	private static final boolean deactivatePlayerOnDeath = true;
 	
+	private static final String achievToken = "[!ACHIEVE!]";
+	
+	private static final String playerToken = "[!PLAYER!]";
+	
+	private static final String descToken = "[!DESC!]";
+	
+	private static final String awardString = "tellraw " + playerToken + " [\"\",{\"text\":\"You've unlocked the achievement \"},{\"text\":\"[" + achievToken + "]\",\"color\":\"green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":[{\"text\":\"" + descToken + "\"}]}}}]";
+			
+			
+		
 	/**
 	 * Class used for storing any additional information about a player we may need.
 	 * @author Skyler
@@ -345,10 +354,8 @@ public class PlayerManager implements Listener {
 	public boolean addAchievement(Player player, Achievement achievement) {
 		if (records.containsKey(player.getUniqueId())) {
 			if (records.get(player.getUniqueId()).addAchievement(achievement)) {
-			
-				player.sendMessage("You've unlocked the achievement " + ChatColor.GREEN + "["
-						+ achievement + "]" + ChatColor.RESET);
-				
+
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), getAchievementCommand(player, achievement));
 				
 			}
 			return false;
@@ -357,11 +364,25 @@ public class PlayerManager implements Listener {
 		addPlayer(player);
 		
 		if (records.get(player.getUniqueId()).addAchievement(achievement)) {
-			player.sendMessage("You've unlocked the achievement " + ChatColor.GREEN + "["
-					+ achievement + "]" + ChatColor.RESET);
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), getAchievementCommand(player, achievement));
 		}
 	
 		return true;
+	}
+	
+	/**
+	 * Gets the achievement reward text command to be executed.
+	 * @param player
+	 * @param achievement
+	 * @return
+	 */
+	private String getAchievementCommand(Player player, Achievement achievement) {
+		String cmd = PlayerManager.awardString;
+		cmd = cmd.replace(achievToken, achievement.getName())
+			.replace(playerToken, player.getName())
+			.replace(descToken, achievement.getDescription());
+		
+		return cmd;
 	}
 	
 	/**
