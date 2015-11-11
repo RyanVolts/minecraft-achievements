@@ -1,5 +1,6 @@
 package com.SkyIsland.MinecraftAchievements.Achievements;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ public class OpenChestAchievement extends ActiveAchievement {
 	
 	public OpenChestAchievement(String name, String description, int point_value, int chestCount) {
 		super(name, description, point_value);
+		playerCache = new HashMap<UUID, Boolean>();
 		count = chestCount;
 	}
 
@@ -38,7 +40,8 @@ public class OpenChestAchievement extends ActiveAchievement {
 		if (playerCache.get(e.getPlayer().getUniqueId()) == false) {
 			//if they haven't been awarded & cached, actually check
 			int stat = e.getPlayer().getStatistic(Statistic.CHEST_OPENED) 
-					+ e.getPlayer().getStatistic(Statistic.TRAPPED_CHEST_TRIGGERED);
+					+ e.getPlayer().getStatistic(Statistic.TRAPPED_CHEST_TRIGGERED)
+					+ 1; //Add one cause the scores haven't been updated yet!
 			if (stat >= count) {
 				MinecraftAchievementsPlugin.plugin.getPlayerManager().addAchievement(
 						e.getPlayer(), this);
