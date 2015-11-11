@@ -29,6 +29,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
 import com.SkyIsland.MinecraftAchievements.Achievements.Achievement;
+import com.SkyIsland.MinecraftAchievements.Achievements.NoDamageOtherAchievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.SurviveAchievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.TimedAchievement;
 import com.SkyIsland.MinecraftAchievements.Scheduler.Scheduler;
@@ -481,6 +482,9 @@ public class PlayerManager implements Listener {
 		record.addTimer(new SurviveAchievement(playerID, "Alive", "Survive 1 Minute", 10, 60));
 		record.addTimer(new SurviveAchievement(playerID, "Staying Alive", "Survive 5 Minutes", 15, 300));
 		record.addTimer(new SurviveAchievement(playerID, "Still Alive", "Survive 10 Minutes", 25, 600));
+		
+		record.addTimer(new NoDamageOtherAchievement(playerID, "Pacifist", "Don't damage other players" 
+				+ "\nfor the first 2 minutes", 20, 120));
 	}
 	
 	/**

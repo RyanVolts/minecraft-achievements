@@ -15,7 +15,7 @@ public abstract class TimedAchievement extends PassiveAchievement implements Tic
 
 	private int time;
 	
-	private UUID playerId;
+	protected UUID playerId;
 	
 	protected TimedAchievement(UUID playerID, String name, String description, int point_value, int secondsTillAwarded) {
 		super(name, description, point_value);
