@@ -78,7 +78,9 @@ public class PlayerManager implements Listener {
 			TRAPPED_CHESTS_OPENED(Statistic.TRAPPED_CHEST_TRIGGERED),
 			PLAYER_KILLS(Statistic.PLAYER_KILLS),
 			SPRINT_ONE_CM(Statistic.SPRINT_ONE_CM),
-			WALK_ONE_CM(Statistic.WALK_ONE_CM);
+			WALK_ONE_CM(Statistic.WALK_ONE_CM),
+			DAMAGE_DEALT(Statistic.DAMAGE_DEALT),
+			DAMAGE_TAKEN(Statistic.DAMAGE_TAKEN);
 			
 			private Statistic statistic;
 			
