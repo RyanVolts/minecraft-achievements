@@ -7,13 +7,13 @@ import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 
 /**
- * Achievement for not doing damage for a certain period of time
+ * Achievement for not taken damage for a certain period of time
  * @author Skyler
  *
  */
-public class NoDamageOtherAchievement extends TimedAchievement {
+public class NoDamageSelfAchievement extends TimedAchievement {
 
-	public NoDamageOtherAchievement(UUID playerID, String name, String description, int point_value, int secondsTillAwarded) {
+	public NoDamageSelfAchievement(UUID playerID, String name, String description, int point_value, int secondsTillAwarded) {
 		super(playerID, name, description, point_value, secondsTillAwarded);
 	}
 	
@@ -27,7 +27,7 @@ public class NoDamageOtherAchievement extends TimedAchievement {
 		}
 		
 		//check their kill stats first
-		if (player.getStatistic(Statistic.DAMAGE_DEALT) == 0) {
+		if (player.getStatistic(Statistic.DAMAGE_TAKEN) == 0) {
 			super.tick(key);
 		}
 	}

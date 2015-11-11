@@ -30,6 +30,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
 import com.SkyIsland.MinecraftAchievements.Achievements.Achievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.NoDamageOtherAchievement;
+import com.SkyIsland.MinecraftAchievements.Achievements.NoDamageSelfAchievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.SurviveAchievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.TimedAchievement;
 import com.SkyIsland.MinecraftAchievements.Scheduler.Scheduler;
@@ -485,6 +486,9 @@ public class PlayerManager implements Listener {
 		
 		record.addTimer(new NoDamageOtherAchievement(playerID, "Pacifist", "Don't damage other players" 
 				+ "\nfor the first 2 minutes", 20, 120));
+		
+		record.addTimer(new NoDamageSelfAchievement(playerID, "Pulling A Peeta", "Take No Damage for" 
+				+ "\nthe first 2 minutes", 20, 120));
 	}
 	
 	/**
