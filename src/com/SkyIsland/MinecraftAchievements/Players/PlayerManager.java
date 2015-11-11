@@ -3,6 +3,7 @@ package com.SkyIsland.MinecraftAchievements.Players;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -28,6 +29,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
 import com.SkyIsland.MinecraftAchievements.Achievements.Achievement;
+import com.SkyIsland.MinecraftAchievements.Achievements.SurviveAchievement;
+import com.SkyIsland.MinecraftAchievements.Achievements.TimedAchievement;
+import com.SkyIsland.MinecraftAchievements.Scheduler.Scheduler;
 
 /**
  * Stores information about each player -- metrics and which achievements they've unlocked
@@ -93,10 +97,13 @@ public class PlayerManager implements Listener {
 		
 		private int score;
 		
+		private Collection<TimedAchievement> timers;
+		
 		private PlayerRecord(Player player) {
 			this.name = player.getName();
 			achievements = new LinkedList<String>();
 			statistics = new TreeMap<Statistic, Integer>();
+			timers = new LinkedList<TimedAchievement>();
 			score = 0;
 		}
 		
@@ -197,6 +204,17 @@ public class PlayerManager implements Listener {
 	        }
 	        
 	        return record;
+	    }
+	    
+	    private void addTimer(TimedAchievement timer) {
+	    	this.timers.add(timer);
+	    }
+	    
+	    private void stopTimers() {
+	    	Scheduler sched = Scheduler.getScheduler();
+	    	for (TimedAchievement timer : timers) {
+	    		sched.unregister(timer);
+	    	}
 	    }
 
 		
@@ -434,6 +452,60 @@ public class PlayerManager implements Listener {
 		if (activePlayers.contains(e.getPlayer().getUniqueId())) {
 			updatePlayer(e.getPlayer());
 			activePlayers.remove(e.getPlayer().getUniqueId());
+		}
+	}
+	
+	/**
+	 * Internal helper method for setting times to start for the specified player.<br />
+	 * This is expected to be called when the player is activated, but performs no checks.
+	 * @param record
+	 */
+	private void startTimers(UUID playerID) {
+		PlayerRecord record = records.get(playerID);
+		
+		if (record == null) {
+			return;
+		}
+		
+		record.addTimer(new SurviveAchievement("Alive", "Survive 1 Minute", 10, 60));
+		record.addTimer(new SurviveAchievement("Staying Alive", "Survive 5 Minutes", 15, 300));
+		record.addTimer(new SurviveAchievement("Still Alive", "Survive 10 Minutes", 25, 600));
+	}
+	
+	/**
+	 * Halts all timers for the player.<br />
+	 * This is expected to be called when the player is being deactivated, but performs no checks.
+	 * @param record
+	 */
+	private void haltTimers(UUID playerID) {
+		PlayerRecord record = records.get(playerID);
+		
+		if (record == null) {
+			return;
+		}
+		
+		record.stopTimers();
+	}
+	
+	public void onTimer(UUID playerID, TimedAchievement timer) {
+		PlayerRecord record = records.get(playerID);
+		if (record == null) {
+			MinecraftAchievementsPlugin.plugin.getLogger().warning("Encountered a bad timer lookup for id:"
+					+ playerID.toString());
+			return;
+		}
+		
+		Player player = Bukkit.getPlayer(playerID);
+		
+		if (player == null) {
+			MinecraftAchievementsPlugin.plugin.getLogger().warning("Offline Player lookup:"
+					+ playerID.toString());			
+			return;
+		}
+		
+		if (record.timers.contains(timer)) {
+			record.timers.remove(timer);
+			addAchievement(player, timer);
 		}
 	}
 }

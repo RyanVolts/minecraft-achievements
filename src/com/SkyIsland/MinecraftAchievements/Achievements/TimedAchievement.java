@@ -47,5 +47,16 @@ public abstract class TimedAchievement extends PassiveAchievement implements Tic
 		
 		awardToPlayers(players);
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof TimedAchievement) {
+			if (((TimedAchievement) o).getName().equals(getName())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 }

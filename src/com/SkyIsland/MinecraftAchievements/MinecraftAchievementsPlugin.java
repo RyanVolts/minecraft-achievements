@@ -91,6 +91,8 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 	 */
 	private void registerAchievements() {
 		Bukkit.getPluginManager().registerEvents(new EquipArmorAchievement(), this);
+		
+		//See sloppy init in PlayerManager#startTimers()
 	}
 	
 	public PlayerManager getPlayerManager() {
