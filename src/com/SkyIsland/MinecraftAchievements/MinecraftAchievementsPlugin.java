@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.SkyIsland.MinecraftAchievements.Achievements.EquipArmorAchievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.KillPlayerAchievement;
+import com.SkyIsland.MinecraftAchievements.Achievements.OpenChestAchievement;
 import com.SkyIsland.MinecraftAchievements.Output.ReportWriter;
 import com.SkyIsland.MinecraftAchievements.Players.PlayerManager;
 import com.SkyIsland.MinecraftAchievements.Players.PlayerManager.PlayerRecord;
@@ -92,12 +93,18 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 	 */
 	private void registerAchievements() {
 		Bukkit.getPluginManager().registerEvents(new EquipArmorAchievement(), this);
+		
 		Bukkit.getPluginManager().registerEvents(
 				new KillPlayerAchievement("It Was An Accident! I Swear!", "Kill your first player", 10, 1), this);
 		Bukkit.getPluginManager().registerEvents(
 				new KillPlayerAchievement("Repeat Offender", "Kill 2 players", 15, 2), this);
 		Bukkit.getPluginManager().registerEvents(
 				new KillPlayerAchievement("Career Tribute", "Kill 5 players", 30, 5), this);
+
+		Bukkit.getPluginManager().registerEvents(
+				new OpenChestAchievement("Curious", "Open 1 Chest", 5, 1), this);
+		Bukkit.getPluginManager().registerEvents(
+				new OpenChestAchievement("Raider of the Lost Chests", "Open 20 Chest", 15, 20), this);
 		
 		//See sloppy init in PlayerManager#startTimers()
 	}

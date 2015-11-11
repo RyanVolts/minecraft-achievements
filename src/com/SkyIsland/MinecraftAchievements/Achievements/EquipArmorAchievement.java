@@ -16,7 +16,7 @@ public class EquipArmorAchievement extends ActiveAchievement {
 	private Map<UUID, Boolean> playerCache; //faster lookups
 	
 	public EquipArmorAchievement() {
-		super("You just might make it","Equip Armor",15);
+		super("You Just Might Make It","Equip Armor",15);
 		playerCache = new HashMap<UUID, Boolean>();
 	}
 
