@@ -104,7 +104,9 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(
 				new OpenChestAchievement("Curious", "Open 1 Chest", 5, 1), this);
 		Bukkit.getPluginManager().registerEvents(
-				new OpenChestAchievement("Raider of the Lost Chests", "Open 20 Chest", 15, 20), this);
+				new OpenChestAchievement("Raider of the Lost Chests", "Open 10 Chest", 10, 10), this);
+		Bukkit.getPluginManager().registerEvents(
+				new OpenChestAchievement("The Explorer", "Open 20 Chest", 15, 20), this);
 		
 		//See sloppy init in PlayerManager#startTimers()
 	}
