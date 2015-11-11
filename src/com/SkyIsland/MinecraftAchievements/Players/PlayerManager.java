@@ -521,9 +521,12 @@ public class PlayerManager implements Listener {
 	}
 	
 	private void clearPlayer(Player player) {
+		int stati;
 		for (PlayerRecord.vanillaStatistics stat : PlayerRecord.vanillaStatistics.values()) {
-			player.decrementStatistic(stat.getStatistic(), 
-					player.getStatistic(stat.getStatistic()));
+			stati = player.getStatistic(stat.getStatistic());
+			if (stati != 0) {
+				player.decrementStatistic(stat.getStatistic(), stati);
+			}
 		}
 	}
 }
