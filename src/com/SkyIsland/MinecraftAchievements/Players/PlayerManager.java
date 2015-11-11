@@ -467,9 +467,9 @@ public class PlayerManager implements Listener {
 			return;
 		}
 		
-		record.addTimer(new SurviveAchievement("Alive", "Survive 1 Minute", 10, 60));
-		record.addTimer(new SurviveAchievement("Staying Alive", "Survive 5 Minutes", 15, 300));
-		record.addTimer(new SurviveAchievement("Still Alive", "Survive 10 Minutes", 25, 600));
+		record.addTimer(new SurviveAchievement(playerID, "Alive", "Survive 1 Minute", 10, 60));
+		record.addTimer(new SurviveAchievement(playerID, "Staying Alive", "Survive 5 Minutes", 15, 300));
+		record.addTimer(new SurviveAchievement(playerID, "Still Alive", "Survive 10 Minutes", 25, 600));
 	}
 	
 	/**
