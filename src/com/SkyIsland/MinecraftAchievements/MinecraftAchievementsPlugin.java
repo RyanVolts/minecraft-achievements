@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,8 +16,10 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.SkyIsland.MinecraftAchievements.Achievements.CraftItemAchievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.EquipArmorAchievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.KillPlayerAchievement;
+import com.SkyIsland.MinecraftAchievements.Achievements.KillPlayerWithBowAchievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.OpenChestAchievement;
 import com.SkyIsland.MinecraftAchievements.Output.ReportWriter;
 import com.SkyIsland.MinecraftAchievements.Players.PlayerManager;
@@ -107,6 +110,12 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 				new OpenChestAchievement("Raider of the Lost Chests", "Open 10 Chest", 10, 10), this);
 		Bukkit.getPluginManager().registerEvents(
 				new OpenChestAchievement("The Explorer", "Open 20 Chest", 15, 20), this);
+
+		Bukkit.getPluginManager().registerEvents(
+				new KillPlayerWithBowAchievement("Sharpshooter", "Kill A Player With A Bow", 15), this);
+		
+		Bukkit.getPluginManager().registerEvents(
+				new CraftItemAchievement("Hunger", "Craft Mushroom Soup", 15, Material.MUSHROOM_SOUP), this);
 		
 		//See sloppy init in PlayerManager#startTimers()
 	}
