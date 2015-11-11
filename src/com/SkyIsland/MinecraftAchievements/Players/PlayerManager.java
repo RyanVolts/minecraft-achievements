@@ -28,6 +28,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
+import com.SkyIsland.MinecraftAchievements.Achievements.Achievement;
 
 /**
  * Stores information about each player -- metrics and which achievements they've unlocked
@@ -81,10 +82,13 @@ public class PlayerManager implements Listener {
 		
 		private Map<Statistic, Integer> statistics;
 		
+		private int score;
+		
 		private PlayerRecord(Player player) {
 			this.name = player.getName();
 			achievements = new LinkedList<String>();
 			statistics = new TreeMap<Statistic, Integer>();
+			score = 0;
 		}
 		
 		private PlayerRecord(String name) {
@@ -97,9 +101,14 @@ public class PlayerManager implements Listener {
 			return achievements;
 		}
 		
-		public boolean addAchievement(String achievement) {
-			if (!achievements.contains(achievement)) {
-				achievements.add(achievement);
+		public int getScore() {
+			return score;
+		}
+		
+		public boolean addAchievement(Achievement achievement) {
+			if (!achievements.contains(achievement.getName())) {
+				achievements.add(achievement.getName());
+				score += achievement.getPoint_Value();
 				return true;
 			}
 			return false;
@@ -136,6 +145,7 @@ public class PlayerManager implements Listener {
 		public Map<String, Object> serialize() {
 			Map<String, Object> map = new HashMap<String, Object>();
 			
+			map.put("score", score);
 			map.put("achievements", achievements);
 			map.put("display", name);
 			
@@ -154,7 +164,7 @@ public class PlayerManager implements Listener {
 		public static PlayerRecord valueOf(Map<String, Object> configMap) {
 	    	
 	    	if (!configMap.containsKey("display") || !configMap.containsKey("achievements")
-	    			|| !configMap.containsKey("tracked-stats")) {
+	    			|| !configMap.containsKey("tracked-stats") || !configMap.containsKey("score")) {
 	    		MinecraftAchievementsPlugin.plugin.getLogger().warning(
 	    				"Unable to load player record, as it's missing keys" +
 	    				(configMap.containsKey("display") ? ": " + configMap.get("display")
@@ -166,6 +176,8 @@ public class PlayerManager implements Listener {
 	    	String name = (String) configMap.get("display");
 	    	
 	        PlayerRecord record = new PlayerRecord(name);
+	        
+	        record.score = (int) configMap.get("score");
 	        
 	        record.achievements = (List<String>) configMap.get("achievements");
 	        
@@ -330,7 +342,7 @@ public class PlayerManager implements Listener {
 	 * @param achievement
 	 * @return true if a new record was created for the player. False if it already existed
 	 */
-	public boolean addAchievement(Player player, String achievement) {
+	public boolean addAchievement(Player player, Achievement achievement) {
 		if (records.containsKey(player.getUniqueId())) {
 			if (records.get(player.getUniqueId()).addAchievement(achievement)) {
 			
