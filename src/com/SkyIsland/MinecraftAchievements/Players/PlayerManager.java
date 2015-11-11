@@ -432,7 +432,12 @@ public class PlayerManager implements Listener {
 	
 	public void addActivePlayer(Player player) {
 		addPlayer(player);
-		activePlayers.add(player.getUniqueId());
+		
+		if (!activePlayers.contains(player.getUniqueId())) {
+			activePlayers.add(player.getUniqueId());
+			startTimers(player.getUniqueId());
+		}
+		
 	}
 	
 	@EventHandler
@@ -444,6 +449,7 @@ public class PlayerManager implements Listener {
 		if (activePlayers.contains(e.getEntity().getUniqueId())) {
 			updatePlayer(e.getEntity());
 			activePlayers.remove(e.getEntity().getUniqueId());
+			haltTimers(e.getEntity().getUniqueId());
 		}
 	}
 	
@@ -452,6 +458,7 @@ public class PlayerManager implements Listener {
 		if (activePlayers.contains(e.getPlayer().getUniqueId())) {
 			updatePlayer(e.getPlayer());
 			activePlayers.remove(e.getPlayer().getUniqueId());
+			haltTimers(e.getPlayer().getUniqueId());
 		}
 	}
 	
