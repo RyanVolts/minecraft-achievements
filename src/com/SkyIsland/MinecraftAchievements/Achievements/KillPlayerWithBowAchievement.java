@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -18,16 +17,13 @@ import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
  * @author Skyler
  *
  */
-public class KillPlayerWithWeaponAchievement extends ActiveAchievement {
+public class KillPlayerWithBowAchievement extends ActiveAchievement {
 
 	private Map<UUID, Boolean> playerCache; //faster lookups
 	
-	private Material weaponType;
-	
-	public KillPlayerWithWeaponAchievement(String name, String description, int points, Material weaponType) {
+	public KillPlayerWithBowAchievement(String name, String description, int points) {
 		super(name, description, points);
 		playerCache = new HashMap<UUID, Boolean>();
-		this.weaponType = weaponType;
 	}
 
 	@EventHandler
