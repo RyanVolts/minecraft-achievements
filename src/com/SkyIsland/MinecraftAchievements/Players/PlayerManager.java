@@ -436,6 +436,8 @@ public class PlayerManager implements Listener {
 		if (!activePlayers.contains(player.getUniqueId())) {
 			activePlayers.add(player.getUniqueId());
 			startTimers(player.getUniqueId());
+			clearPlayer(player);
+			updatePlayer(player);
 		}
 		
 	}
@@ -513,6 +515,13 @@ public class PlayerManager implements Listener {
 		if (record.timers.contains(timer)) {
 			record.timers.remove(timer);
 			addAchievement(player, timer);
+		}
+	}
+	
+	private void clearPlayer(Player player) {
+		for (PlayerRecord.vanillaStatistics stat : PlayerRecord.vanillaStatistics.values()) {
+			player.decrementStatistic(stat.getStatistic(), 
+					player.getStatistic(stat.getStatistic()));
 		}
 	}
 }
