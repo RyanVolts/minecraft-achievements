@@ -23,7 +23,7 @@ public class OpenChestAchievement extends ActiveAchievement {
 	@EventHandler
 	public void OnPlayerDeath(PlayerStatisticIncrementEvent e) {
 		
-		if (e.getStatistic() != Statistic.CHEST_OPENED || e.getStatistic() != Statistic.TRAPPED_CHEST_TRIGGERED) {
+		if (e.getStatistic() != Statistic.CHEST_OPENED && e.getStatistic() != Statistic.TRAPPED_CHEST_TRIGGERED) {
 			return;
 		}
 		
@@ -37,7 +37,8 @@ public class OpenChestAchievement extends ActiveAchievement {
 		
 		if (playerCache.get(e.getPlayer().getUniqueId()) == false) {
 			//if they haven't been awarded & cached, actually check
-			int stat = e.getNewValue();
+			int stat = e.getPlayer().getStatistic(Statistic.CHEST_OPENED) 
+					+ e.getPlayer().getStatistic(Statistic.TRAPPED_CHEST_TRIGGERED);
 			if (stat >= count) {
 				MinecraftAchievementsPlugin.plugin.getPlayerManager().addAchievement(
 						e.getPlayer(), this);
