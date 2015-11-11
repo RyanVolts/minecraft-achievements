@@ -344,7 +344,7 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 		
 		PlayerRecord record = playerManager.getRecord(player.getUniqueId());
 		
-		sender.sendMessage("Score: " + ChatColor.AQUA + record.getScore());
+		sender.sendMessage("Score: " + ChatColor.GOLD + record.getScore());
 		
 		if (record.getAchievements().isEmpty()) {
 			sender.sendMessage(ChatColor.GRAY + "No Achievements!");
