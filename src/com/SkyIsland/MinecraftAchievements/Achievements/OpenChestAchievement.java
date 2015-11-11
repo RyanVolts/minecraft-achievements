@@ -43,6 +43,7 @@ public class OpenChestAchievement extends ActiveAchievement {
 					+ e.getPlayer().getStatistic(Statistic.TRAPPED_CHEST_TRIGGERED)
 					+ 1; //Add one cause the scores haven't been updated yet!
 			if (stat >= count) {
+				playerCache.put(e.getPlayer().getUniqueId(), true);
 				MinecraftAchievementsPlugin.plugin.getPlayerManager().addAchievement(
 						e.getPlayer(), this);
 			}

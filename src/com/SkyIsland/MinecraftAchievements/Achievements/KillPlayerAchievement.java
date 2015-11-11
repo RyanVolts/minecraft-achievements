@@ -41,6 +41,7 @@ public class KillPlayerAchievement extends ActiveAchievement {
 			//if they haven't been awarded & cached, actually check
 			int stat = e.getNewValue();
 			if (stat >= killCount) {
+				playerCache.put(e.getPlayer().getUniqueId(), true);
 				MinecraftAchievementsPlugin.plugin.getPlayerManager().addAchievement(
 						e.getPlayer(), this);
 			}
