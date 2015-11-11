@@ -29,6 +29,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.SkyIsland.MinecraftAchievements.MinecraftAchievementsPlugin;
 import com.SkyIsland.MinecraftAchievements.Achievements.Achievement;
+import com.SkyIsland.MinecraftAchievements.Achievements.KatnissAchievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.NoDamageOtherAchievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.NoDamageSelfAchievement;
 import com.SkyIsland.MinecraftAchievements.Achievements.SurviveAchievement;
@@ -491,6 +492,9 @@ public class PlayerManager implements Listener {
 		
 		record.addTimer(new NoDamageSelfAchievement(playerID, "Pulling A Peeta", "Take No Damage for" 
 				+ "\nthe first 2 minutes", 20, 120));
+		
+		record.addTimer(new KatnissAchievement(playerID, "Pulling A Katniss", "Open a chest, deal no" 
+				+ "\ndamage, and take no damage\nin the first 30 seconds", 30, 30));
 	}
 	
 	/**
