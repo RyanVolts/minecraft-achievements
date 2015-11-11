@@ -23,7 +23,7 @@ public abstract class PassiveAchievement extends Achievement implements Listener
 	public void awardToPlayers(Collection<Player> players) {
 		PlayerManager manager = MinecraftAchievementsPlugin.plugin.getPlayerManager();
 		for (Player player : players) {
-			manager.addAchievement(player, getName());
+			manager.addAchievement(player, this);
 		}
 	}
 
