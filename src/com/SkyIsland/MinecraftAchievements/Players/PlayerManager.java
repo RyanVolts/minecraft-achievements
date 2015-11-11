@@ -111,6 +111,8 @@ public class PlayerManager implements Listener {
 			this.name = name;
 			achievements = new LinkedList<String>();
 			statistics = new TreeMap<Statistic, Integer>();
+			timers = new LinkedList<TimedAchievement>();
+			score = 0;
 		}
 		
 		public List<String> getAchievements() {
