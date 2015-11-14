@@ -21,6 +21,10 @@ commands:
         description: Activates the given player and begins tracking them
         usage: /activateplayer [playername | @a]
         permission: minecraftachievements.admin
+    deactivateplayer:
+        description: Deactivates the player, making sure they aren't tracked
+        usage: /deactivateplayer [playername | @a]
+        permission: minecraftachievements.admin
     printachievementstatus:
         description: Prints general information about the current session or a specific player
         usage: /pastatus {playername}

@@ -471,6 +471,14 @@ public class PlayerManager implements Listener {
 		}
 	}
 	
+	public void deactivatePlayer(Player player) {
+		if (activePlayers.contains(player.getUniqueId())) {
+			updatePlayer(player);
+			activePlayers.remove(player.getUniqueId());
+			haltTimers(player.getUniqueId());
+		}
+	}
+	
 	/**
 	 * Internal helper method for setting times to start for the specified player.<br />
 	 * This is expected to be called when the player is activated, but performs no checks.

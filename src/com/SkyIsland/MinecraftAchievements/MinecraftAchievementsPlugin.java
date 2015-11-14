@@ -142,6 +142,10 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 			return activatePlayer(sender, args);
 		}
 		
+		if (cmd.getName().equalsIgnoreCase("deactivateplayer")) {
+			return deactivatePlayer(sender, args);
+		}
+		
 		if (cmd.getName().equalsIgnoreCase("printachievementstatus")) {
 			return printStatus(sender, args);
 		}
@@ -274,8 +278,38 @@ public class MinecraftAchievementsPlugin extends JavaPlugin {
 		return true;
 	}
 	
+	private boolean deactivatePlayer(CommandSender sender, String[] args) {
+		
+		if (args.length != 1) {
+			return false;
+		}
+		
+		if (args[0].equalsIgnoreCase("@a")) {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				deactivate(player);
+			}
+			sender.sendMessage(ChatColor.GREEN + "Deactivated " + Bukkit.getOnlinePlayers().size() + " players!");
+		} else {
+			@SuppressWarnings("deprecation")
+			Player player = Bukkit.getPlayer(args[0]);
+			if (player == null) {
+				sender.sendMessage(ChatColor.YELLOW + "Unable to locate player " + args[0]);
+				return false;
+			}
+			
+			deactivate(player);
+			sender.sendMessage(ChatColor.GREEN + "Deactivated " + args[0] + "!");
+		}
+		
+		return true;
+	}
+	
 	private void activate(Player player) {
 		playerManager.addActivePlayer(player);
+	}
+	
+	private void deactivate(Player player) {
+		playerManager.deactivatePlayer(player);
 	}
 	
 	private boolean savePlayerManager(File saveFile, boolean overwrite) {
